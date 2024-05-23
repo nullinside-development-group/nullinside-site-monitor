@@ -2,6 +2,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiteMonitor", "SiteMonitor\SiteMonitor.csproj", "{9C6BE74C-22B4-4A81-91EA-32204163F8EE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{9894F6E0-42A7-4A9D-96F8-8ECB2221230A}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\README.md = ..\README.md
+		..\Dockerfile = ..\Dockerfile
+		..\go.sh = ..\go.sh
+		..\Jenkinsfile = ..\Jenkinsfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
