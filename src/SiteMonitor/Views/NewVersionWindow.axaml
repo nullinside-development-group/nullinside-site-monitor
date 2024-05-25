@@ -1,0 +1,35 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:SiteMonitor.ViewModels"
+        x:Name="Window"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        x:Class="SiteMonitor.Views.NewVersionWindow"
+        x:DataType="viewModels:NewVersionWindowViewModel"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        Icon="/Assets/update.png"
+        Title="New Version Available">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:NewVersionWindowViewModel />
+    </Design.DataContext>
+
+    <StackPanel Margin="10">
+        <TextBlock TextWrapping="Wrap" Margin="0 0 0 10">There is a new version of the software available, would you like to download it?</TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <Label>App Version: </Label>
+            <TextBlock Text="{Binding LocalVersion}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Server Version: </Label>
+            <TextBlock Text="{Binding ServerVersion}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding OpenBrowser}" Margin="0 10 0 0">Open Browser...</Button>
+            <Button Command="{Binding CloseWindow}" CommandParameter="{Binding ElementName=Window}" Margin="10 10 0 0">Close</Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

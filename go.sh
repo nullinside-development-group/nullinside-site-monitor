@@ -22,4 +22,4 @@ if [[ -z "$TAG_VERSION" ]]; then
 fi
 
 docker system prune -af
-docker build --build-arg="TAG_VERSION=v"$TAG_VERSION --build-arg="GITHUB_TOKEN="$GITHUB_NULLINSIDE_ORG_RELEASE_TOKEN --progress=plain --no-cache .
+docker build --build-arg="TAG_VERSION="$TAG_VERSION --build-arg="GITHUB_TOKEN="$GITHUB_NULLINSIDE_ORG_RELEASE_TOKEN --progress=plain --no-cache .

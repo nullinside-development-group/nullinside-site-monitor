@@ -1,7 +1,8 @@
 ﻿using ReactiveUI;
 
-namespace AvaloniaApplication1.ViewModels;
+namespace SiteMonitor.ViewModels;
 
-public class ViewModelBase : ReactiveObject
-{
-}
+/// <summary>
+///   A base class for all view models.
+/// </summary>
+public class ViewModelBase : ReactiveObject { }
