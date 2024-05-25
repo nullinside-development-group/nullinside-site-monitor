@@ -19,8 +19,8 @@ ARG DESCRIPTION
 RUN apt-get update && apt-get dist-upgrade -y && apt-get install zip jq -y
 
 # Generate the executables
-RUN dotnet publish "SiteMonitor.csproj" -c $BUILD_CONFIGURATION -o /app/publish/win-x64 -r win-x64
-RUN dotnet publish "SiteMonitor.csproj" -c $BUILD_CONFIGURATION -o /app/publish/win-x86 -r win-x86
+RUN dotnet publish "SiteMonitor.csproj" /p:AssemblyVersion=$TAG_VERSION -c $BUILD_CONFIGURATION -o /app/publish/win-x64 -r win-x64
+RUN dotnet publish "SiteMonitor.csproj" /p:AssemblyVersion=$TAG_VERSION -c $BUILD_CONFIGURATION -o /app/publish/win-x86 -r win-x86
 RUN cd /app/publish/win-x64 && zip -r ../windows-x64.zip *
 RUN cd /app/publish/win-x86 && zip -r ../windows-x86.zip *
 
@@ -39,7 +39,6 @@ RUN curl -L \
 RUN export RELEASE_ID=$(curl -L \
                           -H "Accept: application/vnd.github+json" \
                           -H "Authorization: Bearer $GITHUB_TOKEN" \
-                          -H "X-GitHub-Api-Version: 2022-11-28" \
                           "https://api.github.com/repos/nullinside-development-group/nullinside-site-monitor/releases/latest" \
                           | jq .id) && \
     echo "Release ID: "$RELEASE_ID && \

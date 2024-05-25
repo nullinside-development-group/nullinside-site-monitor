@@ -15,6 +15,14 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>App Version: </Label>
+            <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>    
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>Server Version: </Label>
+            <TextBlock Text="{Binding ServerVersion}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+</StackPanel>
 </Window>
