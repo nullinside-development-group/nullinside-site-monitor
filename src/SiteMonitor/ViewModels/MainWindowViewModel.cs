@@ -110,6 +110,10 @@ public class MainWindowViewModel : ViewModelBase {
       WebsiteUp = await SendHeadRequest("https://nullinside.com");
       ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle");
       NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration");
+      if ((!WebsiteUp || !ApiUp || !NullUp) && IsMinimized) {
+        WindowState = WindowState.Normal;
+      }
+      
       await Task.Delay(TimeSpan.FromSeconds(10));
     }
   }
