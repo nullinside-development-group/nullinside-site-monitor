@@ -10,6 +10,7 @@
         <PackageProjectUrl>https://nullinside.com</PackageProjectUrl>
         <PackageIcon>Assets\icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/nullinside-development-group/nullinside-site-monitor</RepositoryUrl>
+        <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DocumentationFile>bin\Debug\SiteMonitor.xml</DocumentationFile>
