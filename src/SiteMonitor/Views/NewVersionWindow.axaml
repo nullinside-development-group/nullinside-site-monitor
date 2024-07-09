@@ -8,6 +8,7 @@
         x:Class="SiteMonitor.Views.NewVersionWindow"
         x:DataType="viewModels:NewVersionWindowViewModel"
         WindowStartupLocation="CenterOwner"
+        Topmost="True"
         SizeToContent="WidthAndHeight"
         Icon="/Assets/update.png"
         Title="New Version Available">

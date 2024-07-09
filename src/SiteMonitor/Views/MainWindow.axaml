@@ -11,6 +11,7 @@
         CanResize="False"
         WindowState="{Binding WindowState, Mode=TwoWay}"
         ShowInTaskbar="{Binding !IsMinimized, Mode=TwoWay}"
+        Topmost="True"
         WindowStartupLocation="CenterScreen"
         x:Class="SiteMonitor.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
