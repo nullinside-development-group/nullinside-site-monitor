@@ -16,7 +16,8 @@
     <TrayIcon.Icons>
         <TrayIcons>
             <TrayIcon Icon="/Assets/logo.ico"
-                      ToolTipText="Nullinside Site Monitor">
+                      ToolTipText="Nullinside Site Monitor"
+                      Clicked="ShowSettings_OnClick">
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Show" Click="ShowSettings_OnClick" />
