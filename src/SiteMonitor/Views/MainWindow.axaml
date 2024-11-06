@@ -27,13 +27,18 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <Label VerticalAlignment="Center">Server Address:</Label>
             <TextBox Text="{Binding ServerAddress, Mode=TwoWay}" Width="300" />
         </StackPanel>
-        <UniformGrid Grid.Row="1" Margin="0 25 0 0">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 5, 0, 0">
+            <Label VerticalAlignment="Center">Last Chat Received:</Label>
+            <TextBox IsReadOnly="True" Text="{Binding ChatTimestamp}" Width="300" />
+        </StackPanel>
+        <UniformGrid Grid.Row="2" Margin="0 25 0 0">
             <StackPanel>
                 <Label FontSize="26" HorizontalAlignment="Center">Server Online</Label>
                 <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding ServerUp}" />

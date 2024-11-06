@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -25,6 +26,7 @@ public class MainWindowViewModel : ViewModelBase {
   private bool _serverUp;
   private bool _websiteUp;
   private WindowState _windowState;
+  private string? _chatTimestamp;
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
@@ -49,6 +51,14 @@ public class MainWindowViewModel : ViewModelBase {
       }
       catch { }
     }
+  }
+
+  /// <summary>
+  ///   The timestamp of the last chat message that was received.
+  /// </summary>
+  public string? ChatTimestamp {
+    get => _chatTimestamp;
+    set => this.RaiseAndSetIfChanged(ref _chatTimestamp, value);
   }
 
   /// <summary>
@@ -110,7 +120,20 @@ public class MainWindowViewModel : ViewModelBase {
       WebsiteUp = await SendHeadRequest("https://nullinside.com");
       ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle");
       NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration");
-      if ((!WebsiteUp || !ApiUp || !NullUp) && IsMinimized) {
+      ChatTimestamp = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp");
+      var chatNotUpdating = false;
+      if (null != ChatTimestamp) {
+        var parsed = ChatTimestamp.Trim('"');
+        if (DateTime.TryParse(parsed, out DateTime time)) {
+          var timestamp = time.ToLocalTime().ToString(CultureInfo.InvariantCulture);
+          var diff = DateTime.Now - time.ToLocalTime();
+          timestamp = $"{timestamp} ({diff.Hours}h {diff.Minutes}m {diff.Seconds}s ago)";
+          ChatTimestamp = timestamp;
+          chatNotUpdating = diff > TimeSpan.FromMinutes(5);
+        }
+      }
+      
+      if ((!WebsiteUp || !ApiUp || !NullUp || chatNotUpdating) && IsMinimized) {
         WindowState = WindowState.Normal;
       }
       
@@ -121,8 +144,8 @@ public class MainWindowViewModel : ViewModelBase {
   /// <summary>
   ///   Sends a head request to ensure a URL is online.
   /// </summary>
-  /// <param name="address"></param>
-  /// <returns></returns>
+  /// <param name="address">The address to send the request to.</param>
+  /// <returns>True if successful, false otherwise.</returns>
   private async Task<bool> SendHeadRequest(string address) {
     try {
       var handler = new HttpClientHandler();
@@ -135,6 +158,26 @@ public class MainWindowViewModel : ViewModelBase {
     }
     catch {
       return false;
+    }
+  }
+  
+  /// <summary>
+  ///   Sends a head request to ensure a URL is online.
+  /// </summary>
+  /// <param name="address">The address to send the request to.</param>
+  /// <returns>The content of the response.</returns>
+  private async Task<string?> SendGetRequest(string address) {
+    try {
+      var handler = new HttpClientHandler();
+      handler.AutomaticDecompression = ~DecompressionMethods.None;
+      using var httpClient = new HttpClient(handler);
+      using var request = new HttpRequestMessage(HttpMethod.Get, address);
+      request.Headers.TryAddWithoutValidation("user-agent", Constants.FAKE_USER_AGENT);
+      HttpResponseMessage response = await httpClient.SendAsync(request);
+      return await response.Content.ReadAsStringAsync();
+    }
+    catch {
+      return null;
     }
   }
 
