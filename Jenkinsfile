@@ -16,9 +16,12 @@ pipeline {
 				withCredentials([
 					string(credentialsId: 'GITHUB_NULLINSIDE_ORG_RELEASE_TOKEN', variable: 'GITHUB_NULLINSIDE_ORG_RELEASE_TOKEN')
 				]) {
-					sh """
-						bash go.sh 
-					"""
+					script {
+						def statusCode = sh script: "bash go.sh", returnStatus:true
+						if (statusCode != 0) {
+							error "Build Failed"
+						}
+					}
 				}
             }
         }
