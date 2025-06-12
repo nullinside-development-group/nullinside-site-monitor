@@ -9,7 +9,7 @@ namespace SiteMonitor.Models;
 ///   The configuration of the application.
 /// </summary>
 public class Configuration {
-  private static readonly string s_configLocation =
+  private static readonly string S_CONFIG_LOCATION =
     Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "config.json");
 
   private static Configuration? s_instance;
@@ -34,7 +34,7 @@ public class Configuration {
 
   private static Configuration? ReadConfiguration() {
     try {
-      string json = File.ReadAllText(s_configLocation);
+      string json = File.ReadAllText(S_CONFIG_LOCATION);
       return JsonConvert.DeserializeObject<Configuration>(json);
     }
     catch { return null; }
@@ -47,7 +47,7 @@ public class Configuration {
   public static bool WriteConfiguration() {
     try {
       string json = JsonConvert.SerializeObject(Instance);
-      File.WriteAllText(s_configLocation, json);
+      File.WriteAllText(S_CONFIG_LOCATION, json);
       return true;
     }
     catch {
