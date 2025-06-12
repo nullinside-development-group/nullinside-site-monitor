@@ -20,13 +20,13 @@ namespace SiteMonitor.ViewModels;
 /// </summary>
 public class MainWindowViewModel : ViewModelBase {
   private bool _apiUp;
+  private string? _chatTimestamp;
   private bool _isMinimized;
   private bool _nullUp;
   private string? _serverAddress;
   private bool _serverUp;
   private bool _websiteUp;
   private WindowState _windowState;
-  private string? _chatTimestamp;
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
@@ -121,22 +121,22 @@ public class MainWindowViewModel : ViewModelBase {
       ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle");
       NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration");
       ChatTimestamp = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp");
-      var chatNotUpdating = false;
+      bool chatNotUpdating = false;
       if (null != ChatTimestamp) {
-        var parsed = ChatTimestamp.Trim('"');
+        string parsed = ChatTimestamp.Trim('"');
         if (DateTime.TryParse(parsed, out DateTime time)) {
-          var timestamp = time.ToLocalTime().ToString(CultureInfo.InvariantCulture);
-          var diff = DateTime.Now - time.ToLocalTime();
+          string timestamp = time.ToLocalTime().ToString(CultureInfo.InvariantCulture);
+          TimeSpan diff = DateTime.Now - time.ToLocalTime();
           timestamp = $"{timestamp} ({diff.Hours}h {diff.Minutes}m {diff.Seconds}s ago)";
           ChatTimestamp = timestamp;
           chatNotUpdating = diff > TimeSpan.FromMinutes(5);
         }
       }
-      
+
       if ((!WebsiteUp || !ApiUp || !NullUp || chatNotUpdating) && IsMinimized) {
         WindowState = WindowState.Normal;
       }
-      
+
       await Task.Delay(TimeSpan.FromSeconds(10));
     }
   }
@@ -160,7 +160,7 @@ public class MainWindowViewModel : ViewModelBase {
       return false;
     }
   }
-  
+
   /// <summary>
   ///   Sends a head request to ensure a URL is online.
   /// </summary>
