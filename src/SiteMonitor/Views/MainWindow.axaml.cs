@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 using Nullinside.Api.Common.Desktop;
 #if !DEBUG
@@ -91,5 +92,10 @@ public partial class MainWindow : Window {
       });
 #endif
     });
+  }
+
+  private void HideWindowOnLoaded(object? sender, RoutedEventArgs e) {
+    var window = (Window)sender!;
+    window.WindowState = WindowState.Minimized;
   }
 }

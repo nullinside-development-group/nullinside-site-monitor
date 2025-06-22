@@ -13,6 +13,7 @@
         ShowInTaskbar="{Binding !IsMinimized, Mode=TwoWay}"
         Topmost="True"
         WindowStartupLocation="CenterScreen"
+        Loaded="HideWindowOnLoaded"
         x:Class="SiteMonitor.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
         Icon="/Assets/logo.ico"
