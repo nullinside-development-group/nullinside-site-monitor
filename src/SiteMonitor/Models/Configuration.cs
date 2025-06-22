@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
 
 using Newtonsoft.Json;
 
@@ -10,7 +10,8 @@ namespace SiteMonitor.Models;
 /// </summary>
 public class Configuration {
   private static readonly string S_CONFIG_LOCATION =
-    Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "config.json");
+    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "nullinside",
+      "site-monitor", "config.json");
 
   private static Configuration? s_instance;
 
