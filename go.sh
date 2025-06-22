@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # If there is already a version number don't make a new one.
-export TAG_VERSION=$(git tag --points-at HEAD)
+export TAG_VERSION=$(git describe --tags --abbrev=0)
 if [[ -z "$TAG_VERSION" ]]; then
     # Get the latest version for the repo
     export CURRENT_VERSION=$(curl "https://api.github.com/repos/nullinside-development-group/nullinside-site-monitor/tags" | jq -r '.[0].name')
