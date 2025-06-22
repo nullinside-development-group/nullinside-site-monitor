@@ -1,13 +1,20 @@
 using System;
-using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Avalonia.Controls;
-using Avalonia.Threading;
 
 using Nullinside.Api.Common.Desktop;
+#if !DEBUG
+using Microsoft.Extensions.DependencyInjection;
+
+using Avalonia.Threading;
 
 using SiteMonitor.ViewModels;
+#else
+using Avalonia;
+#endif
+
 
 namespace SiteMonitor.Views;
 
@@ -20,7 +27,15 @@ public partial class MainWindow : Window {
   /// </summary>
   public MainWindow() {
     InitializeComponent();
+#if DEBUG
+    this.AttachDevTools();
+#endif
   }
+
+  /// <summary>
+  ///   The service provider for DI.
+  /// </summary>
+  public IServiceProvider? ServiceProvider { get; set; }
 
   /// <summary>
   ///   Checks for a new version number of the application.
@@ -28,33 +43,53 @@ public partial class MainWindow : Window {
   protected override void OnInitialized() {
     base.OnInitialized();
 
+    // handle the command line arguments for updating the application if applicable.
+    string[] args = Environment.GetCommandLineArgs();
+    if (args.Contains("--update")) {
+      _ = GitHubUpdateManager.PerformUpdateAndRestart("nullinside-development-group", "twitch-streaming-tools", args[2], "windows-x64.zip");
+      return;
+    }
+
+    if (args.Contains("--justUpdated")) {
+      _ = GitHubUpdateManager.CleanupUpdate();
+    }
+
+    // check for a new version of the application.
     Task.Factory.StartNew(async () => {
       GithubLatestReleaseJson? serverVersion =
         await GitHubUpdateManager.GetLatestVersion("nullinside-development-group", "nullinside-site-monitor");
-      string? localVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
-      if (null == serverVersion || string.IsNullOrWhiteSpace(serverVersion.name) ||
-          string.IsNullOrWhiteSpace(localVersion)) {
+      if (null == serverVersion || string.IsNullOrWhiteSpace(serverVersion.name)) {
         return;
       }
 
-      localVersion = localVersion.Substring(0, localVersion.LastIndexOf('.'));
-      if (string.IsNullOrWhiteSpace(localVersion)) {
+      if (serverVersion.name?.Equals(Constants.APP_VERSION, StringComparison.InvariantCultureIgnoreCase) ?? true) {
+// Had to add this because code clean up tools were removing the "redundant" return statement.
+// which was causing the check to always be ignored.
+#if !DEBUG
+        return;
+#endif
+      }
+
+#if !DEBUG
+      var vm = ServiceProvider?.GetRequiredService<NewVersionWindowViewModel>();
+      if (null == vm) {
         return;
       }
 
-      if (serverVersion.name?.Equals(localVersion, StringComparison.InvariantCultureIgnoreCase) ?? true) {
-        return;
-      }
+      vm.LocalVersion = Constants.APP_VERSION;
+      Dispatcher.UIThread.Post(async void () => {
+        try {
+          var versionWindow = new NewVersionWindow {
+            DataContext = vm
+          };
 
-      Dispatcher.UIThread.Post(async () => {
-        var versionWindow = new NewVersionWindow {
-          DataContext = new NewVersionWindowViewModel {
-            LocalVersion = localVersion
-          }
-        };
-
-        await versionWindow.ShowDialog(this);
+          await versionWindow.ShowDialog(this);
+        }
+        catch {
+          // do nothing, don't crash
+        }
       });
+#endif
     });
   }
 }
