@@ -7,7 +7,7 @@
         d:DesignWidth="475"
         d:DesignHeight="300"
         Width="475"
-        Height="300"
+        Height="400"
         CanResize="False"
         WindowState="{Binding WindowState, Mode=TwoWay}"
         ShowInTaskbar="{Binding !IsMinimized, Mode=TwoWay}"
@@ -24,41 +24,88 @@
         <viewModels:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <Label VerticalAlignment="Center">Server Address:</Label>
-            <TextBox Text="{Binding ServerAddress, Mode=TwoWay}" Width="300" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 5, 0, 0">
-            <Label VerticalAlignment="Center">Last Chat Received:</Label>
-            <TextBox IsReadOnly="True" Text="{Binding ChatTimestamp}" Width="300" />
-        </StackPanel>
-        <UniformGrid Grid.Row="2" Margin="0 25 0 0">
-            <StackPanel>
-                <Label FontSize="26" HorizontalAlignment="Center">Server Online</Label>
-                <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding ServerUp}" />
-                <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !ServerUp}" />
+    <ScrollViewer>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <Label VerticalAlignment="Center">Server Address:</Label>
+                <TextBox Text="{Binding ServerAddress, Mode=TwoWay}" Width="300" />
             </StackPanel>
-            <StackPanel>
-                <Label FontSize="26" HorizontalAlignment="Center">Website</Label>
-                <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding WebsiteUp}" />
-                <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !WebsiteUp}" />
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0, 5, 0, 5">
+                <Label VerticalAlignment="Center">Last Chat Received:</Label>
+                <TextBox IsReadOnly="True" Text="{Binding ChatTimestamp}" Width="300" />
             </StackPanel>
-            <StackPanel>
-                <Label FontSize="26" HorizontalAlignment="Center">Api</Label>
-                <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding ApiUp}" />
-                <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !ApiUp}" />
+            <StackPanel Grid.Row="2">
+                <Button HorizontalAlignment="Right"
+                        IsVisible="{Binding !IsDisplayingAdvancedCommands}"
+                        Command="{Binding OnShowCommandsCommand}">
+                    Show Advanced Commands
+                </Button>
+                <StackPanel IsVisible="{Binding IsDisplayingAdvancedCommands}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               HorizontalAlignment="Right">
+                            Username:
+                        </Label>
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="1"
+                                 Margin="0 0 0 5"
+                                 Text="{Binding SshUsername}" />
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               HorizontalAlignment="Right">
+                            Password:
+                        </Label>
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="0 0 0 5"
+                                 PasswordChar="*"
+                                 RevealPassword="False"
+                                 Text="{Binding SshPassword}" />
+                    </Grid>
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding OnRestartCommand}">
+                        Restart Computer
+                    </Button>
+                </StackPanel>
             </StackPanel>
-            <StackPanel>
-                <Label FontSize="26" HorizontalAlignment="Center">Null</Label>
-                <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding NullUp}" />
-                <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !NullUp}" />
-            </StackPanel>
-        </UniformGrid>
-    </Grid>
+            <UniformGrid Grid.Row="3" Margin="0 25 0 0">
+                <StackPanel>
+                    <Label FontSize="26" HorizontalAlignment="Center">Server Online</Label>
+                    <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding ServerUp}" />
+                    <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !ServerUp}" />
+                </StackPanel>
+                <StackPanel>
+                    <Label FontSize="26" HorizontalAlignment="Center">Website</Label>
+                    <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding WebsiteUp}" />
+                    <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !WebsiteUp}" />
+                </StackPanel>
+                <StackPanel>
+                    <Label FontSize="26" HorizontalAlignment="Center">Api</Label>
+                    <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding ApiUp}" />
+                    <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !ApiUp}" />
+                </StackPanel>
+                <StackPanel>
+                    <Label FontSize="26" HorizontalAlignment="Center">Null</Label>
+                    <Image Source="/Assets/good.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding NullUp}" />
+                    <Image Source="/Assets/bad.png" Width="48" Stretch="UniformToFill" IsVisible="{Binding !NullUp}" />
+                </StackPanel>
+            </UniformGrid>
+        </Grid>
+    </ScrollViewer>
 </Window>

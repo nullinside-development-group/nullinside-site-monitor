@@ -3,13 +3,15 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 using Avalonia.Controls;
 
-using Nullinside.Api.Common;
-
 using ReactiveUI;
+
+using Renci.SshNet;
 
 using SiteMonitor.Models;
 
@@ -19,19 +21,24 @@ namespace SiteMonitor.ViewModels;
 ///   The view model for the main UI.
 /// </summary>
 public class MainWindowViewModel : ViewModelBase {
-  private bool _apiUp;
+  private bool _apiUp = true;
   private string? _chatTimestamp;
+  private bool _isDisplayingAdvancedCommands;
   private bool _isMinimized;
-  private bool _nullUp;
+  private bool _nullUp = true;
   private string? _serverAddress;
-  private bool _serverUp;
-  private bool _websiteUp;
+  private bool _serverUp = true;
+  private string? _sshPassword;
+  private string? _sshUsername;
+  private bool _websiteUp = true;
   private WindowState _windowState;
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
   /// </summary>
   public MainWindowViewModel() {
+    OnShowCommandsCommand = ReactiveCommand.Create(OnShowCommands);
+    OnRestartCommand = ReactiveCommand.Create(OnRestart);
     Task.Factory.StartNew(PingServer);
     Task.Factory.StartNew(PingSite);
     ServerAddress = Configuration.Instance.ServerAddress;
@@ -113,6 +120,57 @@ public class MainWindowViewModel : ViewModelBase {
   }
 
   /// <summary>
+  ///   Shows the commands in the UI.
+  /// </summary>
+  public ICommand OnShowCommandsCommand { get; set; }
+
+  /// <summary>
+  ///   True if displaying advanced commands, false otherwise.
+  /// </summary>
+  public bool IsDisplayingAdvancedCommands {
+    get => _isDisplayingAdvancedCommands;
+    set => this.RaiseAndSetIfChanged(ref _isDisplayingAdvancedCommands, value);
+  }
+
+  /// <summary>
+  ///   The username to use for the SSH session for commands.
+  /// </summary>
+  public string? SshUsername {
+    get => _sshUsername;
+    set => this.RaiseAndSetIfChanged(ref _sshUsername, value);
+  }
+
+  /// <summary>
+  ///   The password to use for the SSH session for commands.
+  /// </summary>
+  public string? SshPassword {
+    get => _sshPassword;
+    set => this.RaiseAndSetIfChanged(ref _sshPassword, value);
+  }
+
+  /// <summary>
+  ///   Restarts the remote machine.
+  /// </summary>
+  public ICommand OnRestartCommand { get; set; }
+
+  /// <summary>
+  ///   Restarts the remote machine.
+  /// </summary>
+  private async Task OnRestart() {
+    using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
+    await client.ConnectAsync(CancellationToken.None);
+    string command = "shutdown -r now";
+    using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {command}");
+  }
+
+  /// <summary>
+  ///   Handles showing the server commands.
+  /// </summary>
+  private void OnShowCommands() {
+    IsDisplayingAdvancedCommands = true;
+  }
+
+  /// <summary>
   ///   Pings the web resources.
   /// </summary>
   private async Task PingSite() {
@@ -152,7 +210,7 @@ public class MainWindowViewModel : ViewModelBase {
       handler.AutomaticDecompression = ~DecompressionMethods.None;
       using var httpClient = new HttpClient(handler);
       using var request = new HttpRequestMessage(HttpMethod.Get, address);
-      request.Headers.TryAddWithoutValidation("user-agent", Constants.FAKE_USER_AGENT);
+      request.Headers.TryAddWithoutValidation("user-agent", Nullinside.Api.Common.Constants.FAKE_USER_AGENT);
       HttpResponseMessage response = await httpClient.SendAsync(request);
       return response.IsSuccessStatusCode;
     }
@@ -172,7 +230,7 @@ public class MainWindowViewModel : ViewModelBase {
       handler.AutomaticDecompression = ~DecompressionMethods.None;
       using var httpClient = new HttpClient(handler);
       using var request = new HttpRequestMessage(HttpMethod.Get, address);
-      request.Headers.TryAddWithoutValidation("user-agent", Constants.FAKE_USER_AGENT);
+      request.Headers.TryAddWithoutValidation("user-agent", Nullinside.Api.Common.Constants.FAKE_USER_AGENT);
       HttpResponseMessage response = await httpClient.SendAsync(request);
       return await response.Content.ReadAsStringAsync();
     }
