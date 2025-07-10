@@ -42,6 +42,8 @@ public class MainWindowViewModel : ViewModelBase {
     Task.Factory.StartNew(PingServer);
     Task.Factory.StartNew(PingSite);
     ServerAddress = Configuration.Instance.ServerAddress;
+    SshUsername = Configuration.Instance.ServerUsername;
+    SshPassword = Configuration.Instance.ServerPassword;
   }
 
   /// <summary>
@@ -137,7 +139,14 @@ public class MainWindowViewModel : ViewModelBase {
   /// </summary>
   public string? SshUsername {
     get => _sshUsername;
-    set => this.RaiseAndSetIfChanged(ref _sshUsername, value);
+    set {
+      Configuration.Instance.ServerUsername = value;
+      this.RaiseAndSetIfChanged(ref _sshUsername, value);
+      try {
+        Configuration.WriteConfiguration();
+      }
+      catch { }
+    }
   }
 
   /// <summary>
@@ -145,7 +154,14 @@ public class MainWindowViewModel : ViewModelBase {
   /// </summary>
   public string? SshPassword {
     get => _sshPassword;
-    set => this.RaiseAndSetIfChanged(ref _sshPassword, value);
+    set {
+      Configuration.Instance.ServerPassword = value;
+      this.RaiseAndSetIfChanged(ref _sshPassword, value);
+      try {
+        Configuration.WriteConfiguration();
+      }
+      catch { }
+    }
   }
 
   /// <summary>
@@ -178,9 +194,10 @@ public class MainWindowViewModel : ViewModelBase {
       WebsiteUp = await SendHeadRequest("https://nullinside.com");
       ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle");
       NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration");
-      ChatTimestamp = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp");
+      (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp");
       bool chatNotUpdating = false;
-      if (null != ChatTimestamp) {
+      if (HttpStatusCode.OK == chat.Item1 && null != chat.Item2) {
+        ChatTimestamp = chat.Item2;
         string parsed = ChatTimestamp.Trim('"');
         if (DateTime.TryParse(parsed, out DateTime time)) {
           string timestamp = time.ToLocalTime().ToString(CultureInfo.InvariantCulture);
@@ -189,6 +206,10 @@ public class MainWindowViewModel : ViewModelBase {
           ChatTimestamp = timestamp;
           chatNotUpdating = diff > TimeSpan.FromMinutes(5);
         }
+      }
+      else {
+        ChatTimestamp = null;
+        chatNotUpdating = true;
       }
 
       if ((!WebsiteUp || !ApiUp || !NullUp || chatNotUpdating) && IsMinimized) {
@@ -224,7 +245,7 @@ public class MainWindowViewModel : ViewModelBase {
   /// </summary>
   /// <param name="address">The address to send the request to.</param>
   /// <returns>The content of the response.</returns>
-  private async Task<string?> SendGetRequest(string address) {
+  private async Task<(HttpStatusCode, string?)> SendGetRequest(string address) {
     try {
       var handler = new HttpClientHandler();
       handler.AutomaticDecompression = ~DecompressionMethods.None;
@@ -232,10 +253,10 @@ public class MainWindowViewModel : ViewModelBase {
       using var request = new HttpRequestMessage(HttpMethod.Get, address);
       request.Headers.TryAddWithoutValidation("user-agent", Nullinside.Api.Common.Constants.FAKE_USER_AGENT);
       HttpResponseMessage response = await httpClient.SendAsync(request);
-      return await response.Content.ReadAsStringAsync();
+      return (response.StatusCode, await response.Content.ReadAsStringAsync());
     }
     catch {
-      return null;
+      return (HttpStatusCode.InternalServerError, null);
     }
   }
 

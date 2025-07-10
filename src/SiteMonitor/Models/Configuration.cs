@@ -21,6 +21,16 @@ public class Configuration {
   public string? ServerAddress { get; set; }
 
   /// <summary>
+  ///   The server username.
+  /// </summary>
+  public string? ServerUsername { get; set; }
+
+  /// <summary>
+  ///   The server username's password.
+  /// </summary>
+  public string? ServerPassword { get; set; }
+
+  /// <summary>
   ///   The singleton instance of the class.
   /// </summary>
   public static Configuration Instance {
@@ -35,6 +45,10 @@ public class Configuration {
 
   private static Configuration? ReadConfiguration() {
     try {
+      if (!Directory.Exists(Path.GetDirectoryName(S_CONFIG_LOCATION))) {
+        Directory.CreateDirectory(Path.GetDirectoryName(S_CONFIG_LOCATION)!);
+      }
+
       string json = File.ReadAllText(S_CONFIG_LOCATION);
       return JsonConvert.DeserializeObject<Configuration>(json);
     }
