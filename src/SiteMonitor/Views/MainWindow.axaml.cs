@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-using Nullinside.Api.Common.Desktop;
-#if !DEBUG
 using Microsoft.Extensions.DependencyInjection;
 
+using Nullinside.Api.Common.Desktop;
+#if !DEBUG
 using Avalonia.Threading;
 
 using SiteMonitor.ViewModels;
@@ -44,10 +44,15 @@ public partial class MainWindow : Window {
   protected override void OnInitialized() {
     base.OnInitialized();
 
+    // Register all the services needed for the application to run
+    var collection = new ServiceCollection();
+    collection.AddCommonServices();
+    ServiceProvider = collection.BuildServiceProvider();
+
     // handle the command line arguments for updating the application if applicable.
     string[] args = Environment.GetCommandLineArgs();
     if (args.Contains("--update")) {
-      _ = GitHubUpdateManager.PerformUpdateAndRestart("nullinside-development-group", "twitch-streaming-tools", args[2], "windows-x64.zip");
+      _ = GitHubUpdateManager.PerformUpdateAndRestart("nullinside-development-group", "nullinside-site-monitor", args[2], "windows-x64.zip");
       return;
     }
 
