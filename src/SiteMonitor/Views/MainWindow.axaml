@@ -79,10 +79,16 @@
                                  RevealPassword="False"
                                  Text="{Binding SshPassword}" />
                     </Grid>
-                    <Button HorizontalAlignment="Right"
-                            Command="{Binding OnRestartCommand}">
-                        Restart Computer
-                    </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <Button HorizontalAlignment="Right"
+                                Command="{Binding OnRestartCommand}">
+                            Restart Computer
+                        </Button>
+                        <Button HorizontalAlignment="Right"
+                                Command="{Binding OnRestartImagesCommand}">
+                            Restart Services
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
             <UniformGrid Grid.Row="3" Margin="0 25 0 0">

@@ -12,6 +12,7 @@ using Nullinside.Api.Common.Desktop;
 using Avalonia.Threading;
 
 using SiteMonitor.ViewModels;
+
 #else
 using Avalonia;
 #endif
