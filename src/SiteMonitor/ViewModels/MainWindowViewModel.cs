@@ -39,6 +39,7 @@ public class MainWindowViewModel : ViewModelBase {
   public MainWindowViewModel() {
     OnShowCommandsCommand = ReactiveCommand.Create(OnShowCommands);
     OnRestartCommand = ReactiveCommand.Create(OnRestart);
+    OnRestartImagesCommand = ReactiveCommand.Create(OnRestartImages);
     Task.Factory.StartNew(PingServer);
     Task.Factory.StartNew(PingSite);
     ServerAddress = Configuration.Instance.ServerAddress;
@@ -170,6 +171,11 @@ public class MainWindowViewModel : ViewModelBase {
   public ICommand OnRestartCommand { get; set; }
 
   /// <summary>
+  ///   Restarts the remote docker images.
+  /// </summary>
+  public ICommand OnRestartImagesCommand { get; set; }
+
+  /// <summary>
   ///   Restarts the remote machine.
   /// </summary>
   private async Task OnRestart() {
@@ -177,6 +183,24 @@ public class MainWindowViewModel : ViewModelBase {
     await client.ConnectAsync(CancellationToken.None);
     string command = "shutdown -r now";
     using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {command}");
+  }
+
+  /// <summary>
+  ///   Restarts the docker images.
+  /// </summary>
+  private async Task OnRestartImages() {
+    using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
+    await client.ConnectAsync(CancellationToken.None);
+    string[] command = [
+      "docker compose -p nullinside-ui restart",
+      "docker compose -p nullinside-api restart",
+      "docker compose -p nullinside-api-null restart",
+      "docker compose -p nullinside-api-twitch-bot restart"
+    ];
+
+    foreach (string line in command) {
+      using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {line}");
+    }
   }
 
   /// <summary>
