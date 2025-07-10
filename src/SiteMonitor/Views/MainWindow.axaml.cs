@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-using Nullinside.Api.Common.Desktop;
-#if !DEBUG
 using Microsoft.Extensions.DependencyInjection;
 
+using Nullinside.Api.Common.Desktop;
+#if !DEBUG
 using Avalonia.Threading;
 
 using SiteMonitor.ViewModels;
