@@ -189,18 +189,20 @@ public class MainWindowViewModel : ViewModelBase {
   ///   Restarts the docker images.
   /// </summary>
   private async Task OnRestartImages() {
-    using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
-    await client.ConnectAsync(CancellationToken.None);
-    string[] command = [
-      "docker compose -p nullinside-ui restart",
-      "docker compose -p nullinside-api restart",
-      "docker compose -p nullinside-api-null restart",
-      "docker compose -p nullinside-api-twitch-bot restart"
-    ];
+    await Task.Run(async () => {
+      using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
+      await client.ConnectAsync(CancellationToken.None);
+      string[] command = [
+        "docker compose -p nullinside-ui restart",
+        "docker compose -p nullinside-api restart",
+        "docker compose -p nullinside-api-null restart",
+        "docker compose -p nullinside-api-twitch-bot restart"
+      ];
 
-    foreach (string line in command) {
-      using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {line}");
-    }
+      foreach (string line in command) {
+        using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {line}");
+      }
+    });
   }
 
   /// <summary>

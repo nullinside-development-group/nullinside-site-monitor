@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <Version>1.0.3</Version>
+        <Version>1.0.0</Version>
         <PackageProjectUrl>https://nullinside.com</PackageProjectUrl>
         <PackageIcon>Assets\icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/nullinside-development-group/nullinside-site-monitor</RepositoryUrl>
