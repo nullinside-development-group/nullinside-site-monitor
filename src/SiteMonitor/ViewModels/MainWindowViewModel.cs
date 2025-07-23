@@ -180,7 +180,7 @@ public class MainWindowViewModel : ViewModelBase {
   /// </summary>
   private async Task OnRestart() {
     using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
-    await client.ConnectAsync(CancellationToken.None);
+    await client.ConnectAsync(CancellationToken.None).ConfigureAwait(false);
     string command = "shutdown -r now";
     using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {command}");
   }
@@ -191,7 +191,7 @@ public class MainWindowViewModel : ViewModelBase {
   private async Task OnRestartImages() {
     await Task.Run(async () => {
       using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
-      await client.ConnectAsync(CancellationToken.None);
+      await client.ConnectAsync(CancellationToken.None).ConfigureAwait(false);
       string[] command = [
         "docker compose -p nullinside-ui restart",
         "docker compose -p nullinside-api restart",
@@ -202,7 +202,7 @@ public class MainWindowViewModel : ViewModelBase {
       foreach (string line in command) {
         using SshCommand? ssh = client.RunCommand($"echo {_sshPassword} | sudo -S {line}");
       }
-    });
+    }).ConfigureAwait(false);
   }
 
   /// <summary>
@@ -217,10 +217,10 @@ public class MainWindowViewModel : ViewModelBase {
   /// </summary>
   private async Task PingSite() {
     while (true) {
-      WebsiteUp = await SendHeadRequest("https://nullinside.com");
-      ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle");
-      NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration");
-      (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp");
+      WebsiteUp = await SendHeadRequest("https://nullinside.com").ConfigureAwait(false);
+      ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle").ConfigureAwait(false);
+      NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration").ConfigureAwait(false);
+      (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp").ConfigureAwait(false);
       bool chatNotUpdating = false;
       if (HttpStatusCode.OK == chat.Item1 && null != chat.Item2) {
         ChatTimestamp = chat.Item2;
@@ -242,7 +242,7 @@ public class MainWindowViewModel : ViewModelBase {
         WindowState = WindowState.Normal;
       }
 
-      await Task.Delay(TimeSpan.FromSeconds(10));
+      await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
     }
   }
 
@@ -258,7 +258,7 @@ public class MainWindowViewModel : ViewModelBase {
       using var httpClient = new HttpClient(handler);
       using var request = new HttpRequestMessage(HttpMethod.Get, address);
       request.Headers.TryAddWithoutValidation("user-agent", Nullinside.Api.Common.Constants.FAKE_USER_AGENT);
-      HttpResponseMessage response = await httpClient.SendAsync(request);
+      HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
       return response.IsSuccessStatusCode;
     }
     catch {
@@ -278,8 +278,8 @@ public class MainWindowViewModel : ViewModelBase {
       using var httpClient = new HttpClient(handler);
       using var request = new HttpRequestMessage(HttpMethod.Get, address);
       request.Headers.TryAddWithoutValidation("user-agent", Nullinside.Api.Common.Constants.FAKE_USER_AGENT);
-      HttpResponseMessage response = await httpClient.SendAsync(request);
-      return (response.StatusCode, await response.Content.ReadAsStringAsync());
+      HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+      return (response.StatusCode, await response.Content.ReadAsStringAsync().ConfigureAwait(false));
     }
     catch {
       return (HttpStatusCode.InternalServerError, null);
@@ -299,7 +299,7 @@ public class MainWindowViewModel : ViewModelBase {
       }
       catch { }
       finally {
-        await Task.Delay(TimeSpan.FromSeconds(10));
+        await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
       }
     }
   }
