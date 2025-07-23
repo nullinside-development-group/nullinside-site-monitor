@@ -47,7 +47,7 @@ public class NewVersionWindowViewModel : ViewModelBase {
     // asynchronously determine the current version number.
     Task.Factory.StartNew(async () => {
       GithubLatestReleaseJson? version =
-        await GitHubUpdateManager.GetLatestVersion("nullinside-development-group", "nullinside-site-monitor");
+        await GitHubUpdateManager.GetLatestVersion("nullinside-development-group", "nullinside-site-monitor").ConfigureAwait(false);
 
       if (null == version) {
         return;
