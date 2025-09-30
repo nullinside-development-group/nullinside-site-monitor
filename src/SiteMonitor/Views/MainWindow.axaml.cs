@@ -1,3 +1,10 @@
+#if !DEBUG
+using Avalonia.Threading;
+
+using SiteMonitor.ViewModels;
+#else
+using Avalonia;
+#endif
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,14 +15,6 @@ using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
 
 using Nullinside.Api.Common.Desktop;
-#if !DEBUG
-using Avalonia.Threading;
-
-using SiteMonitor.ViewModels;
-
-#else
-using Avalonia;
-#endif
 
 
 namespace SiteMonitor.Views;
