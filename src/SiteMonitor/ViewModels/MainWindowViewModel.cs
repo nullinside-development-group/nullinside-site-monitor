@@ -5,11 +5,11 @@ using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 using Avalonia.Controls;
 
-using ReactiveUI;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Renci.SshNet;
 
@@ -20,26 +20,32 @@ namespace SiteMonitor.ViewModels;
 /// <summary>
 ///   The view model for the main UI.
 /// </summary>
-public class MainWindowViewModel : ViewModelBase {
-  private bool _apiUp = true;
-  private string? _chatTimestamp;
-  private bool _isDisplayingAdvancedCommands;
-  private bool _isMinimized;
-  private bool _nullUp = true;
+public partial class MainWindowViewModel : ViewModelBase {
+  [ObservableProperty] private bool _apiUp = true;
+
+  [ObservableProperty] private string? _chatTimestamp;
+
+  [ObservableProperty] private bool _isDisplayingAdvancedCommands;
+
+  [ObservableProperty] private bool _isMinimized;
+
+  [ObservableProperty] private bool _nullUp = true;
+
   private string? _serverAddress;
-  private bool _serverUp = true;
+
+  [ObservableProperty] private bool _serverUp = true;
+
   private string? _sshPassword;
   private string? _sshUsername;
-  private bool _websiteUp = true;
+
+  [ObservableProperty] private bool _websiteUp = true;
+
   private WindowState _windowState;
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="MainWindowViewModel" /> class.
   /// </summary>
   public MainWindowViewModel() {
-    OnShowCommandsCommand = ReactiveCommand.Create(OnShowCommands);
-    OnRestartCommand = ReactiveCommand.Create(OnRestart);
-    OnRestartImagesCommand = ReactiveCommand.Create(OnRestartImages);
     Task.Factory.StartNew(PingServer);
     Task.Factory.StartNew(PingSite);
     ServerAddress = Configuration.Instance.ServerAddress;
@@ -53,7 +59,7 @@ public class MainWindowViewModel : ViewModelBase {
   public string? ServerAddress {
     get => _serverAddress;
     set {
-      this.RaiseAndSetIfChanged(ref _serverAddress, value);
+      SetProperty(ref _serverAddress, value);
 
       try {
         Configuration.Instance.ServerAddress = value;
@@ -64,75 +70,14 @@ public class MainWindowViewModel : ViewModelBase {
   }
 
   /// <summary>
-  ///   The timestamp of the last chat message that was received.
-  /// </summary>
-  public string? ChatTimestamp {
-    get => _chatTimestamp;
-    set => this.RaiseAndSetIfChanged(ref _chatTimestamp, value);
-  }
-
-  /// <summary>
-  ///   True if the server is online.
-  /// </summary>
-  public bool ServerUp {
-    get => _serverUp;
-    set => this.RaiseAndSetIfChanged(ref _serverUp, value);
-  }
-
-  /// <summary>
-  ///   True if the website is returning a 200.
-  /// </summary>
-  public bool WebsiteUp {
-    get => _websiteUp;
-    set => this.RaiseAndSetIfChanged(ref _websiteUp, value);
-  }
-
-  /// <summary>
-  ///   True if the API is online.
-  /// </summary>
-  public bool ApiUp {
-    get => _apiUp;
-    set => this.RaiseAndSetIfChanged(ref _apiUp, value);
-  }
-
-  /// <summary>
-  ///   True if the null API is online.
-  /// </summary>
-  public bool NullUp {
-    get => _nullUp;
-    set => this.RaiseAndSetIfChanged(ref _nullUp, value);
-  }
-
-  /// <summary>
   ///   Sets the window to normal, minimized, maximized, etc.
   /// </summary>
   public WindowState WindowState {
     get => _windowState;
     set {
-      this.RaiseAndSetIfChanged(ref _windowState, value);
+      SetProperty(ref _windowState, value);
       IsMinimized = _windowState == WindowState.Minimized;
     }
-  }
-
-  /// <summary>
-  ///   True if the application is minimized, false otherwise.
-  /// </summary>
-  public bool IsMinimized {
-    get => _isMinimized;
-    set => this.RaiseAndSetIfChanged(ref _isMinimized, value);
-  }
-
-  /// <summary>
-  ///   Shows the commands in the UI.
-  /// </summary>
-  public ICommand OnShowCommandsCommand { get; set; }
-
-  /// <summary>
-  ///   True if displaying advanced commands, false otherwise.
-  /// </summary>
-  public bool IsDisplayingAdvancedCommands {
-    get => _isDisplayingAdvancedCommands;
-    set => this.RaiseAndSetIfChanged(ref _isDisplayingAdvancedCommands, value);
   }
 
   /// <summary>
@@ -142,7 +87,7 @@ public class MainWindowViewModel : ViewModelBase {
     get => _sshUsername;
     set {
       Configuration.Instance.ServerUsername = value;
-      this.RaiseAndSetIfChanged(ref _sshUsername, value);
+      SetProperty(ref _sshUsername, value);
       try {
         Configuration.WriteConfiguration();
       }
@@ -157,7 +102,7 @@ public class MainWindowViewModel : ViewModelBase {
     get => _sshPassword;
     set {
       Configuration.Instance.ServerPassword = value;
-      this.RaiseAndSetIfChanged(ref _sshPassword, value);
+      SetProperty(ref _sshPassword, value);
       try {
         Configuration.WriteConfiguration();
       }
@@ -168,16 +113,7 @@ public class MainWindowViewModel : ViewModelBase {
   /// <summary>
   ///   Restarts the remote machine.
   /// </summary>
-  public ICommand OnRestartCommand { get; set; }
-
-  /// <summary>
-  ///   Restarts the remote docker images.
-  /// </summary>
-  public ICommand OnRestartImagesCommand { get; set; }
-
-  /// <summary>
-  ///   Restarts the remote machine.
-  /// </summary>
+  [RelayCommand]
   private async Task OnRestart() {
     using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
     await client.ConnectAsync(CancellationToken.None).ConfigureAwait(false);
@@ -188,6 +124,7 @@ public class MainWindowViewModel : ViewModelBase {
   /// <summary>
   ///   Restarts the docker images.
   /// </summary>
+  [RelayCommand]
   private async Task OnRestartImages() {
     await Task.Run(async () => {
       using SshClient client = new(_serverAddress!, _sshUsername!, _sshPassword!);
@@ -208,6 +145,7 @@ public class MainWindowViewModel : ViewModelBase {
   /// <summary>
   ///   Handles showing the server commands.
   /// </summary>
+  [RelayCommand]
   private void OnShowCommands() {
     IsDisplayingAdvancedCommands = true;
   }

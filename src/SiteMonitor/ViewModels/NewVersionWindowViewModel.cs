@@ -5,6 +5,8 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Threading;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using Nullinside.Api.Common.Desktop;
 
 using ReactiveUI;
@@ -16,11 +18,11 @@ namespace SiteMonitor.ViewModels;
 /// <summary>
 ///   The view model for the <seealso cref="NewVersionWindow" /> class.
 /// </summary>
-public class NewVersionWindowViewModel : ViewModelBase {
+public partial class NewVersionWindowViewModel : ViewModelBase {
   /// <summary>
   ///   True if updating the application currently, false otherwise.
   /// </summary>
-  private bool _isUpdating;
+  [ObservableProperty] private bool _isUpdating;
 
   /// <summary>
   ///   The local version of the software.
@@ -35,7 +37,7 @@ public class NewVersionWindowViewModel : ViewModelBase {
   /// <summary>
   ///   The version of the application on the GitHub server.
   /// </summary>
-  private string? _serverVersion;
+  [ObservableProperty] private string? _serverVersion;
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="NewVersionWindowViewModel" /> class.
@@ -64,22 +66,6 @@ public class NewVersionWindowViewModel : ViewModelBase {
   public string? LocalVersion {
     get => _localVersion;
     set => _localVersion = value;
-  }
-
-  /// <summary>
-  ///   The version of the software on the GitHub server.
-  /// </summary>
-  public string? ServerVersion {
-    get => _serverVersion;
-    set => this.RaiseAndSetIfChanged(ref _serverVersion, value);
-  }
-
-  /// <summary>
-  ///   True if updating the application currently, false otherwise.
-  /// </summary>
-  public bool IsUpdating {
-    get => _isUpdating;
-    set => this.RaiseAndSetIfChanged(ref _isUpdating, value);
   }
 
   /// <summary>

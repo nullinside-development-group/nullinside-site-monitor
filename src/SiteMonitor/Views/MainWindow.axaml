@@ -44,7 +44,7 @@
             <StackPanel Grid.Row="2">
                 <Button HorizontalAlignment="Right"
                         IsVisible="{Binding !IsDisplayingAdvancedCommands}"
-                        Command="{Binding OnShowCommandsCommand}">
+                        Command="{Binding ShowCommandsCommand}">
                     Show Advanced Commands
                 </Button>
                 <StackPanel IsVisible="{Binding IsDisplayingAdvancedCommands}">
@@ -81,11 +81,11 @@
                     </Grid>
                     <StackPanel Orientation="Horizontal">
                         <Button HorizontalAlignment="Right"
-                                Command="{Binding OnRestartCommand}">
+                                Command="{Binding RestartCommand}">
                             Restart Computer
                         </Button>
                         <Button HorizontalAlignment="Right"
-                                Command="{Binding OnRestartImagesCommand}">
+                                Command="{Binding RestartImagesCommand}">
                             Restart Services
                         </Button>
                     </StackPanel>
