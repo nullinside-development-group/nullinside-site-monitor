@@ -2,13 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using Nullinside.Api.Common.Desktop;
-#if !DEBUG
+#if !RELEASE
 using Avalonia.Threading;
 
 using SiteMonitor.ViewModels;
@@ -72,12 +73,12 @@ public partial class MainWindow : Window {
       if (serverVersion.name?.Equals(Constants.APP_VERSION, StringComparison.InvariantCultureIgnoreCase) ?? true) {
 // Had to add this because code clean up tools were removing the "redundant" return statement.
 // which was causing the check to always be ignored.
-#if !DEBUG
+#if !RELEASE
         return;
 #endif
       }
 
-#if !DEBUG
+#if !RELEASE
       var vm = ServiceProvider?.GetRequiredService<NewVersionWindowViewModel>();
       if (null == vm) {
         return;
