@@ -21,6 +21,7 @@ namespace SiteMonitor.ViewModels;
 ///   The view model for the main UI.
 /// </summary>
 public partial class MainWindowViewModel : ViewModelBase {
+  private DateTime? _apiDownSince;
   [ObservableProperty] private bool _apiUp = true;
 
   [ObservableProperty] private string? _chatTimestamp;
@@ -168,7 +169,7 @@ public partial class MainWindowViewModel : ViewModelBase {
           TimeSpan diff = DateTime.Now - time.ToLocalTime();
           timestamp = $"{timestamp} ({diff.Hours}h {diff.Minutes}m {diff.Seconds}s ago)";
           ChatTimestamp = timestamp;
-          chatNotUpdating = diff > TimeSpan.FromMinutes(5);
+          chatNotUpdating = diff > Constants.MAX_TIME_WITHOUT_CHATS;
         }
       }
       else {
@@ -176,7 +177,9 @@ public partial class MainWindowViewModel : ViewModelBase {
         chatNotUpdating = true;
       }
 
-      if ((!WebsiteUp || !ApiUp || !NullUp || chatNotUpdating) && IsMinimized) {
+      _apiDownSince = !WebsiteUp || !ApiUp || !NullUp ? _apiDownSince ?? DateTime.Now : null;
+      bool apiNotComingUp = DateTime.Now - _apiDownSince > Constants.MAX_TIME_SERVICE_IS_DOWN;
+      if ((apiNotComingUp || chatNotUpdating) && IsMinimized) {
         WindowState = WindowState.Normal;
       }
 
