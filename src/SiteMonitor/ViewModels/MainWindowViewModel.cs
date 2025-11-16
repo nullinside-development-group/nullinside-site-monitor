@@ -22,6 +22,7 @@ namespace SiteMonitor.ViewModels;
 /// </summary>
 public partial class MainWindowViewModel : ViewModelBase {
   private DateTime? _apiDownSince;
+  private DateTime? _noChatSince;
   [ObservableProperty] private bool _apiUp = true;
 
   [ObservableProperty] private string? _chatTimestamp;
@@ -162,6 +163,7 @@ public partial class MainWindowViewModel : ViewModelBase {
       (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp").ConfigureAwait(false);
       bool chatNotUpdating = false;
       if (HttpStatusCode.OK == chat.Item1 && null != chat.Item2) {
+        _noChatSince = null;
         ChatTimestamp = chat.Item2;
         string parsed = ChatTimestamp.Trim('"');
         if (DateTime.TryParse(parsed, out DateTime time)) {
@@ -173,8 +175,9 @@ public partial class MainWindowViewModel : ViewModelBase {
         }
       }
       else {
+        _noChatSince = _noChatSince ?? DateTime.Now;
         ChatTimestamp = null;
-        chatNotUpdating = true;
+        chatNotUpdating = DateTime.Now - _noChatSince > Constants.MAX_TIME_WITHOUT_CHATS;
       }
 
       _apiDownSince = !WebsiteUp || !ApiUp || !NullUp ? _apiDownSince ?? DateTime.Now : null;
