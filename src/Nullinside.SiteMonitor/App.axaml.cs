@@ -5,10 +5,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-using SiteMonitor.ViewModels;
-using SiteMonitor.Views;
+using Nullinside.SiteMonitor.ViewModels;
+using Nullinside.SiteMonitor.Views;
 
-namespace SiteMonitor;
+namespace Nullinside.SiteMonitor;
 
 /// <summary>
 ///   Main entry point of the application.

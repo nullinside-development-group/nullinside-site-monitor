@@ -4,17 +4,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:SiteMonitor.ViewModels"
         xmlns:controls="clr-namespace:SiteMonitor.Controls"
+        xmlns:viewModels1="clr-namespace:Nullinside.SiteMonitor.ViewModels"
+        xmlns:controls1="clr-namespace:Nullinside.SiteMonitor.Controls"
         x:Name="Window"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
-        x:Class="SiteMonitor.Views.NewVersionWindow"
-        x:DataType="viewModels:NewVersionWindowViewModel"
+        x:Class="Nullinside.SiteMonitor.Views.NewVersionWindow"
+        x:DataType="viewModels1:NewVersionWindowViewModel"
         WindowStartupLocation="CenterOwner"
         SizeToContent="WidthAndHeight"
         Icon="/Assets/update.png"
         Title="New Version Available"
         Background="rgb(26, 24, 23)">
     <Design.DataContext>
-        <viewModels:NewVersionWindowViewModel />
+        <viewModels1:NewVersionWindowViewModel />
     </Design.DataContext>
 
     <DockPanel HorizontalAlignment="Stretch"
@@ -50,7 +52,7 @@
                        Foreground="rgb(204, 200, 175)">
                     Updating
                 </Label>
-                <controls:Loading Width="100" Height="100" />
+                <controls1:Loading Width="100" Height="100" />
             </StackPanel>
         </StackPanel>
     </DockPanel>

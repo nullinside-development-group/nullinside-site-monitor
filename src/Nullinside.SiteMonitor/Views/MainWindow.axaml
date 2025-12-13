@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:SiteMonitor.ViewModels"
+        xmlns:viewModels1="clr-namespace:Nullinside.SiteMonitor.ViewModels"
         mc:Ignorable="d"
         d:DesignWidth="475"
         d:DesignHeight="300"
@@ -14,15 +15,15 @@
         Topmost="True"
         WindowStartupLocation="CenterScreen"
         Loaded="HideWindowOnLoaded"
-        x:Class="SiteMonitor.Views.MainWindow"
-        x:DataType="viewModels:MainWindowViewModel"
+        x:Class="Nullinside.SiteMonitor.Views.MainWindow"
+        x:DataType="viewModels1:MainWindowViewModel"
         Icon="/Assets/logo.ico"
         Title="Site Monitor">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <viewModels:MainWindowViewModel />
+        <viewModels1:MainWindowViewModel />
     </Design.DataContext>
 
     <ScrollViewer>

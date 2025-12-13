@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace SiteMonitor;
+namespace Nullinside.SiteMonitor;
 
 /// <summary>
 ///   Constants used throughout the file.

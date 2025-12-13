@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 
-namespace SiteMonitor.Views;
+namespace Nullinside.SiteMonitor.Views;
 
 /// <summary>
 ///   The new version number dialog.

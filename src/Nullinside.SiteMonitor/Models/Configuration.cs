@@ -3,7 +3,7 @@ using System.IO;
 
 using Newtonsoft.Json;
 
-namespace SiteMonitor.Models;
+namespace Nullinside.SiteMonitor.Models;
 
 /// <summary>
 ///   The configuration of the application.

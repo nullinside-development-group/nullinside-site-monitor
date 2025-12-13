@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 
-namespace SiteMonitor.Controls;
+namespace Nullinside.SiteMonitor.Controls;
 
 /// <summary>
 ///   A loading icon.
