@@ -3,9 +3,9 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
-using SiteMonitor.ViewModels;
+using Nullinside.SiteMonitor.ViewModels;
 
-namespace SiteMonitor;
+namespace Nullinside.SiteMonitor;
 
 /// <summary>
 ///   Pre-generated for us.

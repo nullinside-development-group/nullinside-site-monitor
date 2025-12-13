@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" Width="200" Height="200"
-             x:Class="SiteMonitor.Controls.Loading">
+             x:Class="Nullinside.SiteMonitor.Controls.Loading">
     <UserControl.Styles>
         <Style Selector="Rectangle.textColor">
             <Setter Property="Fill" Value="rgb(204, 200, 175)" />

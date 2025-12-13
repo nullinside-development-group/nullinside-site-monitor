@@ -7,7 +7,7 @@ using Avalonia.ReactiveUI;
 using log4net;
 using log4net.Config;
 
-namespace SiteMonitor;
+namespace Nullinside.SiteMonitor;
 
 internal sealed class Program {
   /// <summary>

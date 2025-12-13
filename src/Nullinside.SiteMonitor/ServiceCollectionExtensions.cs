@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using SiteMonitor.ViewModels;
+using Nullinside.SiteMonitor.ViewModels;
 
-namespace SiteMonitor;
+namespace Nullinside.SiteMonitor;
 
 /// <summary>
 ///   A wrapper that contains the registered services.

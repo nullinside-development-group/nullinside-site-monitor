@@ -11,11 +11,11 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Nullinside.SiteMonitor.Models;
+
 using Renci.SshNet;
 
-using SiteMonitor.Models;
-
-namespace SiteMonitor.ViewModels;
+namespace Nullinside.SiteMonitor.ViewModels;
 
 /// <summary>
 ///   The view model for the main UI.

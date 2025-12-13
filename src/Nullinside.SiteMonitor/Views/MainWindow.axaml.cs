@@ -1,12 +1,11 @@
 #if !DEBUG
 using Avalonia.Threading;
 
-using SiteMonitor.ViewModels;
+using Nullinside.SiteMonitor.ViewModels;
 #else
 using Avalonia;
 #endif
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Avalonia.Controls;
@@ -17,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nullinside.Api.Common.Desktop;
 
 
-namespace SiteMonitor.Views;
+namespace Nullinside.SiteMonitor.Views;
 
 /// <summary>
 ///   The main application window.

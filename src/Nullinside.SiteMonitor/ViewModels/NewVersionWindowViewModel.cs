@@ -8,12 +8,11 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Nullinside.Api.Common.Desktop;
+using Nullinside.SiteMonitor.Views;
 
 using ReactiveUI;
 
-using SiteMonitor.Views;
-
-namespace SiteMonitor.ViewModels;
+namespace Nullinside.SiteMonitor.ViewModels;
 
 /// <summary>
 ///   The view model for the <seealso cref="NewVersionWindow" /> class.
@@ -47,7 +46,7 @@ public partial class NewVersionWindowViewModel : ViewModelBase {
     CloseWindow = ReactiveCommand.Create<Window>(CloseWindowCommand);
 
     // asynchronously determine the current version number.
-    Task.Factory.StartNew(async () => {
+    Task.Factory.StartNew<Task>(async () => {
       GithubLatestReleaseJson? version =
         await GitHubUpdateManager.GetLatestVersion("nullinside-development-group", "nullinside-site-monitor").ConfigureAwait(false);
 
