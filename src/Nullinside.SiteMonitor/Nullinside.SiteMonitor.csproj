@@ -34,7 +34,7 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.20" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-        <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.2" />
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.95.0" />
     </ItemGroup>
 
     <ItemGroup>
