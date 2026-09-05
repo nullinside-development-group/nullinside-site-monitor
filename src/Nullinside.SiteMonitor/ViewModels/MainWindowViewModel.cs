@@ -160,7 +160,7 @@ public partial class MainWindowViewModel : ViewModelBase {
       WebsiteUp = await SendHeadRequest("https://nullinside.com").ConfigureAwait(false);
       ApiUp = await SendHeadRequest("https://nullinside.com/api/v1/featureToggle").ConfigureAwait(false);
       NullUp = await SendHeadRequest("https://nullinside.com/null/v1/database/migration").ConfigureAwait(false);
-      (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/bot/chat/timestamp").ConfigureAwait(false);
+      (HttpStatusCode, string?) chat = await SendGetRequest("https://nullinside.com/twitch-bot/v1/chats/status").ConfigureAwait(false);
       bool chatNotUpdating = false;
       if (HttpStatusCode.OK == chat.Item1 && null != chat.Item2) {
         _noChatSince = null;
